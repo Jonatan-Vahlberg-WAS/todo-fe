@@ -3,9 +3,10 @@ import React from 'react'
 interface TaskItemProps {
     task: Task
     updateTask: (updatedTask: Task) => void
+    listMode?: boolean
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, updateTask }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ task, updateTask, listMode }) => {
     const onChange = (name: 'title' | 'completed', value: any) => {
         let updatedTask: Task = { ...task }
         if (name === 'title') {
@@ -17,7 +18,11 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, updateTask }) => {
         updateTask(updatedTask)
     }
     return (
-        <div className="w-full">
+        <div
+            className={`w-full ${
+                listMode ? 'pointer-events-none' : 'pointer-events-auto'
+            }`}
+        >
             <label className="inline-flex items-center w-full">
                 <input
                     checked={task.completed}

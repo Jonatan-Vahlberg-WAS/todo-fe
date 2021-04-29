@@ -7,11 +7,17 @@ type ListBoxProps = {
     items: Task[]
     addItem: (task: Task, onComplete: () => void) => void
     updateList: (index: number, task: Task) => void
+    updateMode?: boolean
 }
 
-const ListBox: React.FC<ListBoxProps> = ({ items, addItem, updateList }) => {
+const ListBox: React.FC<ListBoxProps> = ({
+    items,
+    addItem,
+    updateList,
+    updateMode,
+}) => {
     return (
-        <div>
+        <div className={`flex flex-col flex-grow overflow-hidden`}>
             <Formik
                 initialValues={{
                     newTask: '',
@@ -41,7 +47,11 @@ const ListBox: React.FC<ListBoxProps> = ({ items, addItem, updateList }) => {
                     </Form>
                 )}
             </Formik>
-            <div className="mt-4">
+            <div
+                className={`mt-4 flex-grow ${
+                    updateMode ? 'overflow-y-auto' : ''
+                }`}
+            >
                 {items.map((item, index) => (
                     <TaskItem
                         key={`ITEM_NEW_TASK_${index}`}

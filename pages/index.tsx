@@ -1,12 +1,16 @@
 import Head from 'next/head'
 import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import Layout from '../components/Layout'
 import { Formik, Form } from 'formik'
 import StyledInput from '../components/StyledInput'
 import { useState } from 'react'
+import ApiKit from '../utils/ApiKit'
+import routes from '../utils/routes'
 
 const Home: NextPage<{}> = () => {
     const [isLoginMode, setIsLoginMode] = useState<boolean>(true)
+    const router = useRouter()
 
     return (
         <Layout>
@@ -18,6 +22,14 @@ const Home: NextPage<{}> = () => {
                 }}
                 onSubmit={(values) => {
                     if (isLoginMode) {
+                        ApiKit.obtainToken(
+                            values.email,
+                            values.password,
+                            () => {
+                                const { href, as } = routes.lists
+                                router.push(href, as)
+                            }
+                        )
                         return
                     }
                     return

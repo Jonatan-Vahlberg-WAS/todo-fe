@@ -1,9 +1,19 @@
 import axios from 'axios'
-import storageKeys from './storageKeys'
+import storageKeys from './StorageKeys'
 
 class ApiKit {
-    // baseUrl = 'http://138.197.191.174/api'
-    baseUrl = 'http://localhost:8000/api'
+    baseUrl = 'http://138.197.191.174/api'
+    // baseUrl = 'http://localhost:8000/api'
+
+    getConfig() {
+        const token = localStorage.getItem(storageKeys.ACCESS_TOKEN ?? '')
+        console.log('TOKEN', token)
+        const config = {
+            headers: { Authorization: `Bearer ${token}` },
+        }
+        return config
+    }
+
     obtainToken(username: string, password: string, onComplete: () => void) {
         axios
             .post(`${this.baseUrl}/token/`, { username, password })
@@ -30,15 +40,6 @@ class ApiKit {
             .catch((error) => {
                 console.warn('ERROR', error)
             })
-    }
-
-    getConfig() {
-        const token = localStorage.getItem(storageKeys.ACCESS_TOKEN ?? '')
-        console.log('TOKEN', token)
-        const config = {
-            headers: { Authorization: `Bearer ${token}` },
-        }
-        return config
     }
 
     createUser(username: string, password: string, onComplete: () => void) {
@@ -118,8 +119,8 @@ class ApiKit {
         doneOnce?: boolean
     ) {
         axios
-            .post(
-                `${this.baseUrl}/lists/update/${list.id}`,
+            .put(
+                `${this.baseUrl}/lists/update/${list.id}/`,
                 list,
                 this.getConfig()
             )
@@ -138,16 +139,12 @@ class ApiKit {
             })
     }
 
-    deleteList(
-        listId: number,
-        onComplete: (data: any) => void,
-        doneOnce?: boolean
-    ) {
+    deleteList(listId: number, onComplete: () => void, doneOnce?: boolean) {
         axios
-            .delete(`${this.baseUrl}/lists/update/${listId}`, this.getConfig())
+            .delete(`${this.baseUrl}/lists/delete/${listId}`, this.getConfig())
             .then((response) => {
                 if (response.status === 200) {
-                    onComplete(response.data)
+                    onComplete()
                 }
             })
             .catch((error) => {

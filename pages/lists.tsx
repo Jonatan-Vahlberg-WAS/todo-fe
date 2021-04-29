@@ -4,16 +4,23 @@ import NewTaskList from '../components/NewTaskList'
 import ApiKit from '../utils/ApiKit'
 import { usetodoContext } from '../utils/TodoContext'
 import ListItem from '../components/ListItem'
+import UpdateListModal from '../components/UpdateListModal'
 
 interface listsProps {}
 
 const lists: React.FC<listsProps> = () => {
-    const { todolists, setTodolists } = usetodoContext()
+    const {
+        todolists,
+        setTodolists,
+        selectedTodolist,
+        setSelectedTodolist,
+    } = usetodoContext()
     useEffect(() => {
         ApiKit.getLists((data) => {
             setTodolists(data)
         })
     }, [])
+    console.log('SELECt', selectedTodolist)
     return (
         <Layout>
             <NewTaskList />
@@ -22,6 +29,12 @@ const lists: React.FC<listsProps> = () => {
                     <ListItem list={list} />
                 ))}
             </div>
+            <UpdateListModal
+                isOpen={!!selectedTodolist}
+                toggle={() => {
+                    setSelectedTodolist(undefined)
+                }}
+            />
         </Layout>
     )
 }
